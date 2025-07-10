@@ -1,13 +1,14 @@
 import boto3
 from botocore.exceptions import ClientError
 import logging
+import streamlit as st
 
 logger = logging.getLogger(__name__)
 
 
 def invoke_agent(agent_id, agent_alias_id, session_id, prompt):
     try:
-        client = boto3.session.Session().client(service_name="bedrock-agent-runtime",region_name ="us-east-1")
+        client = boto3.session.Session().client(service_name="bedrock-agent-runtime",region_name=st.secrets["AWS_DEFAULT_REGION"], aws_access_key_id=st.secrets["AWS_ACCESS_KEY_IDE"], aws_secret_access_key=st.secrets["AWS_SECRET_ACCESS_KEY"])
         # See https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/bedrock-agent-runtime/client/invoke_agent.html
         response = client.invoke_agent(
             agentId=agent_id,
