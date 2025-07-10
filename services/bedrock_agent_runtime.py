@@ -22,8 +22,8 @@ def invoke_agent(agent_id, agent_alias_id, session_id, prompt):
         citations = []
         trace = {}
 
-        has_guardrail_trace = False
         try:
+            has_guardrail_trace = False
             for event in response.get("completion"):
                 # Combine the chunks to get the output text
                 if "chunk" in event:
@@ -48,10 +48,9 @@ def invoke_agent(agent_id, agent_alias_id, session_id, prompt):
                             trace[mapped_trace_type].append(event["trace"]["trace"][trace_type])
         except EventStreamError as e:
             logger.error(f"EventStreamError while processing response: {e}")
-            if not output_text:
-                raise Exception("Failed to process agent response due to stream error")
+            raise Exception("Failed to process agent response due to stream error")
 
-    except (ClientError, EventStreamError) as e:
+    except ClientError as e:
         logger.error(f"Error invoking agent: {e}")
         raise
 
